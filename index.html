@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <h1>Blocking script on Main thread versus Worker thread</h1>
     <div>
         <button id="start-counter" onclick="startCounter()">Start Counter</button>
         <button id="reset-counter" onclick="resetCounter()">Reset Counter</button>
@@ -17,7 +18,7 @@
     <div>
         <button id="main-thread" onclick="startBlockingAction()">Run on Main thread</button>
         <button id="worker-thread" onclick="startNonBlockingAction()">Run on Worker thread</button>
-        <p>Blocking script: <span id="script-message">Waiting for message</span></p>
+        <p>Script message: <span id="script-message">Waiting for message</span></p>
     </div>
 
     <script src="./blocker.js"></script>
@@ -28,7 +29,6 @@
             worker.postMessage('start');
             worker.onmessage = (e) => {
                 document.querySelector("#script-message").textContent = e.data;
-                // This worker is not terminating, nor closing from inside. I'm not sure why.
                 worker.terminate();
             }
         }
