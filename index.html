@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <button id="start-counter" onclick="startCounter()">Start Counter</button>
+        <button id="reset-counter" onclick="resetCounter()">Reset Counter</button>
+        <p>Counter: <span id="counter">0</span></p>
+    </div>
+    <div>
+        <button id="main-thread" onclick="startBlockingAction()">Run on Main thread</button>
+        <button id="worker-thread" onclick="startNonBlockingAction()">Run on Worker thread</button>
+        <p>Blocking script: <span id="script-message">Waiting for message</span></p>
+    </div>
+
+    <script src="./blocker.js"></script>
+    <script>
+
+        function startNonBlockingAction() {
+            const worker = new Worker("./worker.js")
+            worker.postMessage('start');
+            worker.onmessage = (e) => {
+                document.querySelector("#script-message").textContent = e.data;
+                // This worker is not terminating, nor closing from inside. I'm not sure why.
+                worker.terminate();
+            }
+        }
+
+        function startBlockingAction() {
+            const message = blocker("Finished from main thread.");
+            document.querySelector("#script-message").textContent = message
+        }
+
+        let stopper = false
+
+        function resetCounter() {
+            stopper = true
+            document.querySelector("#counter").textContent = 0;
+            document.querySelector("#script-message").textContent = "Waiting for message"
+        }
+
+        function startCounter() {
+            if (stopper) {
+                stopper = false;
+                return;
+            }
+            const counter = document.querySelector("#counter");
+            const number = parseInt(counter.textContent)
+            counter.textContent = number + 1;
+            window.requestAnimationFrame(startCounter)
+        }
+    </script>
+</body>
+
+</html>
