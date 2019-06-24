@@ -10,6 +10,8 @@
 
 <body>
     <h1>Blocking script on Main thread versus Worker thread</h1>
+    <p>In order to reproduce the Chromium render bug: 1. Click the start counter button, 2. Click the Run on Worker
+        Thread. <em>Expected Behavior: </em>Counter runs smoothly.</p>
     <div>
         <button id="start-counter" onclick="startCounter()">Start Counter</button>
         <button id="reset-counter" onclick="resetCounter()">Reset Counter</button>
@@ -35,10 +37,7 @@
     <br />
     <br />
     <br />
-    <p>If anyone can tell me why in Chrome the counter slows down, hit me up with an issue:
-        <a
-            href="https://github.com/claytron5000/worker-demo/issues">https://github.com/claytron5000/worker-demo/issues</a>
-    </p>
+
 
     <script src="./blocker.js"></script>
     <script>
