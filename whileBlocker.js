@@ -1,4 +1,4 @@
-function blocker(message) {
+function whileBlocker(message) {
     const endTime = Date.now() + 2000;
     while (Date.now() < endTime) {
         console.log("running blocking script")

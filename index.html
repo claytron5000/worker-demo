@@ -6,6 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        .spinner {
+            width: 40px;
+            height: 5px;
+            background: #333333;
+            margin-top: 40px;
+        }
+
+        .spin-container {
+            height: 150px;
+        }
+
+        .spin {
+            -webkit-animation: rotation 1s infinite linear;
+        }
+
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(359deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -13,9 +39,22 @@
     <p>In order to reproduce the Chromium render bug: 1. Click the start counter button, 2. Click the Run on Worker
         Thread. <em>Expected Behavior: </em>Counter runs smoothly.</p>
     <div>
+        <h2>Counter animation</h2>
         <button id="start-counter" onclick="startCounter()">Start Counter</button>
         <button id="reset-counter" onclick="resetCounter()">Reset Counter</button>
         <p>Counter: <span id="counter">0</span></p>
+    </div>
+    <div class="spin-container">
+        <h2>Javascript rotator animation</h2>
+        <button id="start-spinner" onclick="startSpinner()">Start Spinner</button>
+        <button id="reset-spinner" onclick="resetSpinner()">Reset Spinner</button>
+        <div id="spinner" class="spinner"></div>
+    </div>
+    <div class="spin-container">
+        <h2>CSS rotator animation</h2>
+        <button id="start-css-spinner" onclick="startCSSSpinner()">Start CSS Spinner</button>
+        <button id="reset-css-spinner" onclick="resetCSSSpinner()">Reset CSS Spinner</button>
+        <div id="CSSSpinner" class="spinner"></div>
     </div>
     <div>
         <button id="main-thread" onclick="startBlockingAction()">Run on Main thread</button>
@@ -38,43 +77,8 @@
     <br />
     <br />
 
-
-    <script src="./blocker.js"></script>
-    <script>
-
-        function startNonBlockingAction() {
-            const worker = new Worker("./worker.js")
-            worker.postMessage('start');
-            worker.onmessage = (e) => {
-                document.querySelector("#script-message").textContent = e.data;
-                worker.terminate();
-            }
-        }
-
-        function startBlockingAction() {
-            const message = blocker("Finished from main thread.");
-            document.querySelector("#script-message").textContent = message
-        }
-
-        let stopper = false
-
-        function resetCounter() {
-            stopper = true
-            document.querySelector("#counter").textContent = 0;
-            document.querySelector("#script-message").textContent = "Waiting for message"
-        }
-
-        function startCounter() {
-            if (stopper) {
-                stopper = false;
-                return;
-            }
-            const counter = document.querySelector("#counter");
-            const number = parseInt(counter.textContent)
-            counter.textContent = number + 1;
-            window.requestAnimationFrame(startCounter)
-        }
-    </script>
+    <script src="./whileBlocker.js"></script>
+    <script src="./main.js"></script>
 </body>
 
 </html>

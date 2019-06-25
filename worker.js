@@ -1,7 +1,7 @@
-importScripts("./blocker.js");
+importScripts("./whileBlocker.js");
 
 self.addEventListener('message', function (e) {
-    const message = blocker("Finished from worker thread");
+    const message = whileBlocker("Finished from worker thread");
     postMessage(message);
     self.close()
 }, false);
