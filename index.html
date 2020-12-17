@@ -10,16 +10,19 @@
 
 <body>
     <h1>Blocking script on Main thread versus Worker thread</h1>
-    <p>In order to reproduce the Chromium render bug: 1. Click the start counter button, 2. Click the Run on Worker
-        Thread. <em>Expected Behavior: </em>Counter runs smoothly.</p>
+    <p>Click <b>Start Counter</b> button. Run blocking code on the main thread and in a worker thread by clicking the respective buttons.</p>
+    <h2>Expected Behaviors</h2>
+    <p>Blocking code run on the main thread blocks the counter. It pauses, then recommences when the blocking script is over. Blocking code run on the worker thread does not block the counter, it runs at the same pace continuously.</p>
+    <p>Observed behavior: Main thread blocks as expected. The worker thread causes a "slow-down." The counter continues to count, but at a much slower pace.</p>
+    <p>Note: the source of the issue is the console.log in the blocking while loop. But, the bug only appears if the console is closed.</p> 
     <div>
         <button id="start-counter" onclick="startCounter()">Start Counter</button>
         <button id="reset-counter" onclick="resetCounter()">Reset Counter</button>
         <p>Counter: <span id="counter">0</span></p>
     </div>
     <div>
-        <button id="main-thread" onclick="startBlockingAction()">Run on Main thread</button>
-        <button id="worker-thread" onclick="startNonBlockingAction()">Run on Worker thread</button>
+        <button id="main-thread" onclick="startBlockingAction()">Run blocker on Main thread</button>
+        <button id="worker-thread" onclick="startNonBlockingAction()">Run blocker on Worker thread</button>
         <p>Script message: <span id="script-message">Waiting for message</span></p>
     </div>
     <br />
